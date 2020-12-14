@@ -1,30 +1,16 @@
-
-{{- $fullName := include "helm-guestbook.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "helm-guestbook.fullname" . }}
   annotations:
     kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: "lets-encrypt-issuer"
 spec:
-  tls:
-    - hosts:
-      {{- range .Values.ingress.hosts }}
-        - {{ .host | quote }}
-      {{- end }}
-      secretName: {{ template "helm-guestbook.fullname" . }}-tls
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-          {{- range .paths }}
-          - path: {{ . }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-          {{- end }}
-    {{- end }}
+  - host: demo.questdev.xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          # Reference to a Service name, also specified in the Rollout spec.strategy.canary.stableService field
+          serviceName: {{ template "helm-guestbook.fullname" . }}
+          servicePort: 80
