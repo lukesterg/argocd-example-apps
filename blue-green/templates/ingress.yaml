@@ -8,10 +8,32 @@ metadata:
 spec:
   tls:
   - hosts:
-    - demob.questdev.xyz
+    - demo.questdev.xyz
     secretName: {{ template "helm-guestbook.fullname" . }}-tls
   rules:
-  - host: demob.questdev.xyz
+  - host: demo.questdev.xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          # Reference to a Service name, also specified in the Rollout spec.strategy.canary.stableService field
+          serviceName: {{ template "helm-guestbook.fullname" . }}
+          servicePort: 80
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "helm-guestbook.fullname" . }}-preview
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "lets-encrypt-issuer"
+spec:
+  tls:
+  - hosts:
+    - demo-preview.questdev.xyz
+    secretName: {{ template "helm-guestbook.fullname" . }}-preview-tls
+  rules:
+  - host: demo-preview.questdev.xyz
     http:
       paths:
       - path: /
