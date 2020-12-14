@@ -4,7 +4,12 @@ metadata:
   name: {{ template "helm-guestbook.fullname" . }}
   annotations:
     kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
+  tls:
+  - hosts:
+    - demo.questdev.xyz
+    secretName: {{ template "helm-guestbook.fullname" . }}-tls
   rules:
   - host: demo.questdev.xyz
     http:
