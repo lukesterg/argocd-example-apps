@@ -39,5 +39,5 @@ spec:
       - path: /
         backend:
           # Reference to a Service name, also specified in the Rollout spec.strategy.canary.stableService field
-          serviceName: {{ template "helm-guestbook.fullname" . }}
+          serviceName: {{ template "helm-guestbook.fullname" . }}-preview
           servicePort: 80
