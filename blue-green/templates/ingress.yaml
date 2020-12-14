@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - demo.questdev.xyz
+    - demob.questdev.xyz
     secretName: {{ template "helm-guestbook.fullname" . }}-tls
   rules:
-  - host: demo.questdev.xyz
+  - host: demob.questdev.xyz
     http:
       paths:
       - path: /
